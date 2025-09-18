@@ -1,0 +1,832 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invisibility Cloak</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪄</text></svg>">
+    
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warning-gradient: linear-gradient(135deg, #f7b733 0%, #fc4a1a 100%);
+            --error-gradient: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+            
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #1a1a2e;
+            --bg-tertiary: #16213e;
+            --bg-card: rgba(255, 255, 255, 0.08);
+            --bg-card-hover: rgba(255, 255, 255, 0.12);
+            
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-tertiary: rgba(255, 255, 255, 0.6);
+            --text-accent: #64ffda;
+            
+            --border-primary: rgba(255, 255, 255, 0.1);
+            --border-secondary: rgba(255, 255, 255, 0.05);
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.25);
+            
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 350ms ease;
+        }
+
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: radial-gradient(ellipse at top, var(--bg-secondary) 0%, var(--bg-tertiary) 50%, var(--bg-primary) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Enhanced animated background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, var(--text-accent), transparent);
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .particle-small {
+            width: 2px;
+            height: 2px;
+        }
+
+        .particle-medium {
+            width: 4px;
+            height: 4px;
+        }
+
+        .particle-large {
+            width: 6px;
+            height: 6px;
+        }
+        
+        /* Container spacing */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 30px;
+        }
+
+        /* Header spacing and typography */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 30px 0;
+        }
+
+        .title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+        }
+
+        /* Main layout spacing */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 40px;
+            margin-bottom: 60px;
+            align-items: start;
+        }
+
+        /* Video section enhancements */
+        .video-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .video-container {
+            position: relative;
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 25px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-primary);
+            box-shadow: 
+                var(--shadow-xl),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .video-frame {
+            position: relative;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            margin: 0 auto;
+        }
+
+        #videoStream {
+            width: 100%;
+            height: auto;
+            min-height: 500px;
+            display: block;
+            border-radius: 25px;
+            object-fit: cover;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: var(--text-accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+        }
+
+        /* Enhanced controls */
+        .controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background: var(--primary-gradient);
+            border: none;
+            padding: 16px 28px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: inherit;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-gradient);
+        }
+
+        .btn-accent {
+            background: var(--accent-gradient);
+        }
+
+        .btn-success {
+            background: var(--success-gradient);
+        }
+
+        /* Sidebar enhancements */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stats-panel, .instructions-panel {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .panel-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            color: var(--text-accent);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .panel-title i {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .stat-value {
+            color: var(--text-accent);
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .instructions-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .instructions-list li {
+            counter-increment: step-counter;
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .instructions-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            background: var(--primary-gradient);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Status message system */
+        .status-message {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(20px);
+            border: 1px solid;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transform: translateX(400px);
+            transition: transform var(--transition-slow);
+            z-index: 1000;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .status-message.show {
+            transform: translateX(0);
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.15);
+            border-color: #4caf50;
+            color: #4caf50;
+        }
+
+        .status-error {
+            background: rgba(244, 67, 54, 0.15);
+            border-color: #f44336;
+            color: #f44336;
+        }
+
+        .status-info {
+            background: rgba(33, 150, 243, 0.15);
+            border-color: #2196f3;
+            color: #2196f3;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--text-accent);
+        }
+        
+        /* Keyboard shortcuts hint */
+        .shortcuts-hint {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: var(--bg-card);
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-primary);
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .shortcut-key {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+            color: var(--text-accent);
+            margin: 0 2px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr 320px;
+                gap: 30px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .sidebar {
+                order: -1;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            
+            #videoStream {
+                min-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+            
+            .header {
+                margin-bottom: 40px;
+            }
+            
+            .title {
+                font-size: clamp(2rem, 8vw, 3rem);
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .sidebar {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .status-message {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 20px 0;
+                transform: none;
+                max-width: none;
+            }
+            
+            .shortcuts-hint {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                margin-top: 20px;
+                text-align: center;
+            }
+            
+            #videoStream {
+                min-height: 300px;
+            }
+            
+            .video-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-panel, .instructions-panel {
+                padding: 20px;
+            }
+            
+            .panel-title {
+                font-size: 1.2rem;
+            }
+            
+            .instructions-list li {
+                font-size: 0.9rem;
+                padding-left: 35px;
+            }
+            
+            .instructions-list li::before {
+                width: 24px;
+                height: 24px;
+                font-size: 0.8rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🪄 INVISIBLE RED</h1>
+        </div>
+
+        <div class="main-content">
+            <div class="video-section">
+                <div class="video-container magic-glow">
+                    <div class="video-frame">
+                        <img id="videoStream" src="/video_feed" alt="Invisibility Cloak Portal" />
+                        <div class="video-overlay">
+                            <div class="status-indicator"></div>
+                            <span>LIVE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-secondary" id="fullscreenBtn">
+                        <i class="fas fa-expand"></i>
+                        <span>Fullscreen Mode</span>
+                    </button>
+                    <button class="btn btn-accent" id="captureBtn">
+                        <i class="fas fa-camera"></i>
+                        <span>Capture Frame</span>
+                    </button>
+                    <button class="btn btn-success" id="statsBtn">
+                        <i class="fas fa-download"></i>
+                        <span>Export Stats</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="stats-panel">
+                    <h3 class="panel-title">
+                        <i class="fas fa-chart-line"></i>
+                        System Metrics
+                    </h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Camera Status</span>
+                        <span class="stat-value" id="cameraStatus">
+                            <div class="loading"></div>
+                        </span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Resolution</span>
+                        <span class="stat-value" id="resolution">-- x --</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Frame Rate</span>
+                        <span class="stat-value" id="fps">-- FPS</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Frames Processed</span>
+                        <span class="stat-value" id="framesProcessed">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Background Captures</span>
+                        <span class="stat-value" id="backgroundCaptures">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Runtime</span>
+                        <span class="stat-value" id="runtime">0s</span>
+                    </div>
+                </div>
+
+                <div class="instructions-panel">
+                    <h3 class="panel-title">
+                        <i class="fas fa-magic"></i>
+                        Usage Guide
+                    </h3>
+                    <ol class="instructions-list">
+                        <li>Ensure optimal lighting conditions in your environment</li>
+                        <li>Position yourself away from the camera's field of view initially</li>
+                        <li>Prepare a bright red fabric or clothing item</li>
+                        <li>Hold the red material in front of your body</li>
+                        <li>Experience the magic of optical invisibility</li>
+                        <li>Experiment with different red materials for best results</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="statusMessage" class="status-message"></div>
+    
+    <div class="shortcuts-hint">
+        <div>Shortcuts: <span class="shortcut-key">F</span> Fullscreen <span class="shortcut-key">C</span> Capture <span class="shortcut-key">S</span> Stats</div>
+    </div>
+
+    <script>
+        /**
+         * Creates and appends animated particles to the background.
+         */
+        function createParticles() {
+            const particleContainer = document.getElementById('particles');
+            const particleTypes = [
+                { class: 'particle-small', count: 30 },
+                { class: 'particle-medium', count: 20 },
+                { class: 'particle-large', count: 10 }
+            ];
+
+            particleTypes.forEach(type => {
+                for (let i = 0; i < type.count; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = `particle ${type.class}`;
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.top = Math.random() * 100 + '%';
+                    particleContainer.appendChild(particle);
+                }
+            });
+        }
+
+        /**
+         * Displays a temporary status message to the user.
+         * @param {string} message The message to display.
+         * @param {string} type The type of message ('info', 'success', 'error').
+         * @param {number} duration The duration in milliseconds to display the message.
+         */
+        function showStatus(message, type = 'info', duration = 4000) {
+            const statusEl = document.getElementById('statusMessage');
+            
+            if (statusEl.hideTimeout) {
+                clearTimeout(statusEl.hideTimeout);
+            }
+            
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-${type} show`;
+            
+            statusEl.hideTimeout = setTimeout(() => {
+                statusEl.classList.remove('show');
+            }, duration);
+        }
+
+        /**
+         * Updates a specific stat value with a brief animation.
+         * @param {string} elementId The ID of the element to update.
+         * @param {string} newValue The new value to set.
+         */
+        function updateStatValue(elementId, newValue) {
+            const element = document.getElementById(elementId);
+            if (!element) return; // Ensure element exists
+
+            const currentValue = element.textContent;
+
+            // Handle the loading spinner specifically
+            if (element.querySelector('.loading')) {
+                element.innerHTML = newValue; // Replace spinner with actual value
+                element.style.transition = 'none'; // Disable transition for initial replacement
+                element.style.transform = 'scale(1)';
+                element.style.color = 'var(--text-primary)';
+                return;
+            }
+
+            if (currentValue !== newValue) {
+                element.style.transition = 'none'; // Temporarily disable transition for immediate scale-up
+                element.style.transform = 'scale(1.1)';
+                element.style.color = 'var(--text-accent)';
+                
+                setTimeout(() => {
+                    element.textContent = newValue;
+                    element.style.transition = 'transform 0.2s ease-out, color 0.2s ease-out'; // Re-enable transition
+                    element.style.transform = 'scale(1)';
+                    element.style.color = 'var(--text-primary)';
+                }, 50); // Small delay to make the scale-up visible
+            }
+        }
+
+
+        /**
+         * Fetches and updates system metrics from the server.
+         */
+        function updateStats() {
+            fetch('/stats')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    updateStatValue('cameraStatus', data.camera_status);
+                    updateStatValue('resolution', data.current_resolution);
+                    updateStatValue('fps', `${data.fps} FPS`);
+                    updateStatValue('framesProcessed', data.frames_processed.toLocaleString());
+                    updateStatValue('backgroundCaptures', data.background_captures);
+                    updateStatValue('runtime', `${data.runtime_seconds}s`);
+                })
+                .catch(error => {
+                    console.error('Stats update failed:', error);
+                    updateStatValue('cameraStatus', 'Disconnected');
+                    // Ensure the loading spinner is removed if stats fail to load
+                    const cameraStatusEl = document.getElementById('cameraStatus');
+                    if (cameraStatusEl.querySelector('.loading')) {
+                        cameraStatusEl.innerHTML = 'Disconnected';
+                    }
+                    showStatus('Failed to connect to the server or retrieve stats.', 'error');
+                });
+        }
+
+        /**
+         * Toggles fullscreen mode for the video container.
+         */
+        function toggleFullscreen() {
+            const videoContainer = document.querySelector('.video-container');
+            if (!document.fullscreenElement) {
+                videoContainer.requestFullscreen().catch(err => {
+                    showStatus(`Error attempting to enable fullscreen mode: ${err.message}`, 'error');
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        /**
+         * Captures a frame from the video stream and downloads it.
+         */
+        function captureFrame() {
+            showStatus('Capturing frame...', 'info');
+            fetch('/capture_frame')
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'invisibility_cloak_frame.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    showStatus('Frame captured and downloaded!', 'success');
+                })
+                .catch(() => showStatus('Failed to capture frame.', 'error'));
+        }
+
+        /**
+         * Downloads system metrics as a JSON file.
+         */
+        function downloadStats() {
+            showStatus('Exporting stats...', 'info');
+            fetch('/stats')
+                .then(response => response.json())
+                .then(data => {
+                    const dataStr = JSON.stringify(data, null, 2);
+                    const blob = new Blob([dataStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'invisibility_cloak_stats.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    showStatus('Stats exported!', 'success');
+                })
+                .catch(() => showStatus('Failed to export stats.', 'error'));
+        }
+
+        /**
+         * Initializes the application by setting up event listeners and periodic tasks.
+         */
+        function initializeApp() {
+            createParticles();
+            
+            // Initial stats update and then every 2 seconds
+            updateStats();
+            setInterval(updateStats, 2000);
+
+            // Add event listeners for buttons
+            document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+            document.getElementById('captureBtn').addEventListener('click', captureFrame);
+            document.getElementById('statsBtn').addEventListener('click', downloadStats);
+
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'f' || e.key === 'F') {
+                    e.preventDefault();
+                    toggleFullscreen();
+                } else if (e.key === 'c' || e.key === 'C') {
+                    e.preventDefault();
+                    captureFrame();
+                } else if (e.key === 's' || e.key === 'S') {
+                    e.preventDefault();
+                    downloadStats();
+                }
+            });
+        }
+
+        // Start the application when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+    </script>
+</body>
+</html>
